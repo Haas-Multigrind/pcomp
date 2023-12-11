@@ -1,0 +1,421 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://multigrind.com//compensation_schema.json",
+    "title": "Contour Compensation Schema",
+    "description": "Contains Nominal Values and Actual (measured) Values",
+    "type": "object",
+    "properties": {
+      "MachineID": {
+        "description": "Machine identifier e.g. 3749",
+        "type": "string"
+      },
+      "Version": {
+        "description": "Version of the grinding software",
+        "type": "string"
+      },
+      "ProductName": {
+        "description": "Name of the part do be compensated",
+        "type": "string"
+      },
+      "ContourName": {
+        "description": "name of the compensated contour",
+        "type": "string"
+      },
+      "User": {
+        "description": "user of the grinding software",
+        "type": "string"
+      },
+      "MeasType": {
+        "description": "The measurement type",
+        "type": "string"
+      },
+      "NominalValues": {
+        "description": "The target values",
+        "type": "object",
+        "properties": {
+          "DateTime": {
+            "description": "Time of measurement",
+            "type": "string"
+          },
+          "NrOfPoints": {
+            "description": "Number of measured points",
+            "type": "integer"
+          },
+          "MeasurementRange": {
+            "description": "Minimum and maximimum measurements",
+            "type": "object",
+            "properties": {
+              "XMax": {
+                "description": "Maximum X Value",
+                "type": "number"
+              },
+              "XMin": {
+                "description": "Minimum X Value",
+                "type": "number"
+              }
+            }
+          },
+          "Units": {
+            "description": "Measured Units",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2
+          },
+          "Description": {
+            "description": "Measured attributes",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2
+          },
+          "GlobalScaleFactor": {
+            "description": "Global scale factor",
+            "type": "integer"
+          },
+          "GlobalOffset": {
+            "description": "Global offset",
+            "type": "object",
+            "properties": {
+              "X": {
+                "description": "X offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "X offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              },
+              "Y": {
+                "description": "Y offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "Y offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              },
+              "Z": {
+                "description": "Z offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "Z offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              },
+              "A": {
+                "description": "A offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "A offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              },
+              "B": {
+                "description": "B offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "B offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              },
+              "C": {
+                "description": "C offset",
+                "type": "object",
+                "properties": {
+                  "Value": {
+                    "description": "C offset value",
+                    "type": "number"
+                  },
+                  "Unit": {
+                    "description": "Measuring unit",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "Values": {
+            "description": "Nominal values",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "ScaleFactors": {
+            "description": "Scale factors",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "NrOfPoints",
+          "GlobalScaleFactor",
+          "Values"
+        ],
+        "ActualValues": {
+          "description": "The measured values",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "description": "The name of the measured set of values",
+              "type": "object",
+              "properties": {
+                "DateTime": {
+                  "description": "Time of measurement",
+                  "type": "string"
+                },
+                "Operator": {
+                  "description": "The name of the machine operator",
+                  "type": "string"
+                },
+                "Machine": {
+                  "description": "The name of the machine",
+                  "type": "string"
+                },
+                "Comment": {
+                  "description": "Comment",
+                  "type": "string"
+                },
+                "Units": {
+                  "description": "Measured Units",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2
+                },
+                "Description": {
+                  "description": "Measured attributes",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2
+                },
+                "GlobalOffset": {
+                  "description": "Global offset",
+                  "type": "object",
+                  "properties": {
+                    "X": {
+                      "description": "X offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "X offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Y": {
+                      "description": "Y offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "Y offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Z": {
+                      "description": "Z offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "Z offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "A": {
+                      "description": "A offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "A offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "B": {
+                      "description": "B offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "B offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "C": {
+                      "description": "C offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "C offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "BestFitMethod": {
+                  "description": "Best fit method",
+                  "type": "string"
+                },
+                "BestFitOffset": {
+                  "description": "Best fit offset",
+                  "type": "object",
+                  "properties": {
+                    "X": {
+                      "description": "X offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "X offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Y": {
+                      "description": "Y offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "Y offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "C": {
+                      "description": "C offset",
+                      "type": "object",
+                      "properties": {
+                        "Value": {
+                          "description": "C offset value",
+                          "type": "number"
+                        },
+                        "Unit": {
+                          "description": "Measuring unit",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "MaxValue": {
+                  "description": "Maximum value",
+                  "type": "number"
+                },
+                "MinValue": {
+                  "description": "Minimum value",
+                  "type": "number"
+                },
+                "WeightedMaxValue": {
+                  "description": "Weighted maximum value",
+                  "type": "number"
+                },
+                "WeightedMinValue": {
+                  "description": "Weighted minimum value",
+                  "type": "number"
+                },
+                "GlobalScaleFactor": {
+                  "description": "Global scale factor",
+                  "type": "integer"
+                },
+                "EquidistantAllowance": {
+                  "description": "Equidistant allowance",
+                  "type": "number"
+                },
+                "Values": {
+                  "description": "Measured values",
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "GlobalScaleFactor",
+            "Values"
+          ]
+        }
+      }
+    },
+    "required": [
+      "ProductName",
+      "NominalValues"
+    ]
+  }
