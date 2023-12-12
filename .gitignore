@@ -1,3 +1,4 @@
 pcomp_server.lnk
 
-./venv
+./venv/
+/venv/

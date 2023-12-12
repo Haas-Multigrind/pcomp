@@ -1,62 +1,67 @@
-# Closed Loop-Kompensation in der Schleifbearbeitung
+# PComp
 
-## 1.1   Definition Profilkompensation und Closed Loop
+# 1. Closed Loop-compensation in Profile Grinding
 
-Die **Profilkompensation** korrigiert geschliffene Formelemente (Walzwerkzeuge, Stechplattenprofile, Formfräserprofile, …) oder erzeugte Geometrieelemente (Nutsteigungsverläufe, …). In der Regel wird der Schlichtpfad kompensiert, welcher zuvor mit Punktkontakt zwischen Schleifscheibe und Werkstück geschliffen wurden.      
-Die Profilkompensation beim Einstechschleifen mit Profilscheiben ist geometrisch nicht möglich, weil hier ein Linienkontakt vorliegt. Alternativ kann hier der Abrichtprozess kompensiert werden, sofern dieser mit Punktkontakt stattfindet.
+This repository describes the procedure and the exchange format for profile compensation (closed loop).
+The Json format is documented via a Json schema and tested for validity. 
 
-![puntk_linienkontakt.png](puntk_linienkontakt.png)
+## 1.1 Definition of Profilcompensation and Closed Loop
 
-Die Profilerfassung zur Kompensation erfolgt typischerweise immer auf einer Messmaschine, wäre aber prinzipiell auch auf der Schleifmaschine möglich. Der Begriff **Closed Loop** in der Systemtechnik bedeutet, dass in diesem Fall die Messung in einem geschlossenen Kreislauf zur Kompensation zurückgeführt wird.    
-Adelbert Haas verwendet den Begriff Closed Loop ausschließlich im Falle der Profilkompensation und nicht für die Kompensation einzelner Werkstückparameter (Durchmesser, Steigung, Winkel, etc.). Im systemtechnischen Sinn ist dies auch als Closed Loop Kompensation zu sehen und wird von anderen Maschinenhersteller auch in diesem Sinne verwendet.     
+Profile compensation corrects ground form elements (rolling tools, profiled inserts, form cutter profiles, ...) or generated geometry elements (flute profil shcape, ...). In general, the finishing path that was previously ground with point contact between the grinding wheel and the workpiece is compensated. 
+Profile compensation for plunge-cut grinding with profile wheels is not geometrically possible. The present line contact prevents this. Alternatively, the dressing process can be compensated, assumed it takes place with point contact.
 
-## 1.2 Potentiale und Voraussetzungen
+
+![punkt_linienkontakt.png](punkt_linienkontakt.png)
+
+Profile acquisition for compensation is typically carried out on a measuring machine, but in principle would also be possible on the grinding machine. The term **closed loop** means that in this case the measurement is fed back to the compensation in a closed loop.
+Adelbert Haas uses the term closed loop exclusively in the case of profile compensation and not for the compensation of individual workpiece parameters (diameter, pitch, angle, etc.). In terms of system technology, this can also be seen as closed loop compensation and is also used in this sense by other machine manufacturers.
+
+## 1.2 Potential and prerequisites
 
 <Haas Intern>
 
-## 2. Technische Realisierung der Profilkompensation
+## 2. Technical realization of profile compensation
 
-Der ClosedLoop zur Profilkompensation wird über einen File-basierten Austausch ermöglicht. Schleifmaschine (Schleifsoftware) und Messmaschine Schreiben für eine Kompensation ein *.Json-File welches nachfolgend erläutert wird.
-
-Auf den Austauschordner greifen beide Schleif- und Messsoftware zu. Die Schleifsoftware schreibt die Nominalwerte. Und liest *sofern vorhanden* Actualwerte ein. Die Messmaschine liest die Nominalwerte und schreibt für jede erfolgreiche Messung die Actualwerte in das Json-File.
+The closed loop for profile compensation is enabled by a file-based exchange. The grinding machine (grinding software) and measuring machine (measuring software) write a *.Json file for compensation, which is explained here.
+Both software accesses an exchange folder on the customer server, grinding machine or measuring machine. The grinding software writes the nominal values and reads *if available* actual values. The measuring machine reads the nominal values and then measures accordingly. The actual values are written to the Json file for each successful measurement.
 
 ### 2.1 *.json-File
 
-* Schleifsoftware Horizon schreibt Nominal/Solldaten zur Messung für nachfolgende Kompensation
-* Messmaschine hängt bei Bedarf (Automation/Bediener fordert an) Actual/Messresultat an Sollfile an.
-* Einheitliche Beschreibung des kompensierten Werkstücks im gleichen File. 
-* File Flexibel für Metadaten und Für Nutzer interpretierbar -> **json** ist das Format der Wahl
-* Das File kann initial durch die Schleifsoftware geschrieben werden. Alternativ wird es eingelesen (nur Einfachkompensation).
-* Format muss erweiterbar (versioniert) sein.
-* FileName entspricht dem Produktname > Leerzeichen und Umlaute sind möglich!
+* Horizon grinding software writes the file and the NominalValues object for measurement for subsequent compensation.
+* Measuring machine appends AcutalValues (result) to the Object if required (automation/operator requests).
+* The objective is the uniform description of the compensated workpiece in the same file.
+* **json** is the format of choice, because Data and Metadata can be stored and accessed by human and machine 
+* The file can initially be written by the grinding software. Alternatively, it can be read in (single compensation only).
+* Format is expandable (versioned).
+* FileName corresponds to the product name > Spaces and German Umlauts are possible!
 
-### 2.2 Messung
+### 2.2 Measurment
 
-* Nominaldaten werden über Punkte und zugehörige Normalenvektoren in Werkstückkoordinaten definiert. 
-  * i.d.R. über X/Y-Koordinate
-  * i.d.R ist dabei ein Abstand von 0.02 mm vorgewählt.
-  * wiederholte (doppelte) Eineindeutige Punkte  können vorkommen. (Info: Wird mit zukünftiger Version der Schleifsoftware vorausichtlich entfallen)
-* Messwerte werden an jedem Punkt als Abweichung (Soll-Ist) in Normalenrichtung zurückgegeben.
-  * i.d.R. muss dabei eine Einpassung stattfinden. 
+* Nominal data is defined via points and associated normal vectors in workpiece coordinates. 
+  * usually via X/Y coordinates
+  * usually, an Euclidean distance of 0.02 mm is preselected.
+  * Repeated (double) unique points can occur. (information: Will probably be omitted with future versions of the grinding software)
+* Measured values are returned at each point as a deviation (nominal/actual) in the normal direction.
+  * usually, an fitting must be made. 
 
-### 2.3 Optionen
+### 2.3 Options
 
-* Falls ein File im Ordner Existiert, und die Sollpunkte von den Istpunkten abweichen (z.B. weil Tesselation geändert/ kontur geändert) gibt die Schleifsoftware einen Fehler mit Option das File neu zu schreiben (vorhandene Korrekturen werden dann überschrieben (!) <> Die Nominaldaten müssen vor Jeder Messung Geschrieben werden.
-* <Interrn>: wenn kein Nominal vorhanden, kann die Messmaschine auch Nominal über ein eingeladenes Messfile Interpolieren. Dann ist aber nur eine Korrektur möglich. alternativ kann hier das "einfache" 6/7-Spalten Format verwendet werden.
-* Wenn 2d Konturen gehandhabt werden sollte das Profil diese Werte auswerten können. 3D geht auch, ich muss aber die Info immer mitziehen.
+* If a file exists in the folder and the nominal points deviate from the actual points, the grinding software issues an error with the option to rewrite the file. Existing corrections are then overwritten <> The nominal data must be written before each measurement.
+<Intern>: if no nominal is available, the measuring machine can also interpolate nominally via a loaded measurement file. Alternatively, the "simple" 6/7-column format can be used here.
+* If 2d contours are handled, the profile should be able to evaluate these values. 3D also works, but I always have to drag the info along.
 
-### 2.4 Designfragen: 
+### 2.4 Desing issues 
 
-* Um Probleme mit Datenkonvertierung zu vermeiden ist eine Vergleichstoleranz von 7 Nachkommastellen sinnvoll. Gerechnet wird aber auf den Normalen.
-* Auf Werte `Infinity` / `NaN` wird Verzichtet, obwohl es sinnvoll wäre. [[rfc4627](https://www.rfc-editor.org/rfc/rfc4627.txt)](https://www.rfc-editor.org/rfc/rfc4627.txt)
-* `id` der Punkte wird mit angegeben, für Menschliche Lesbarkeit und Fehlersuche
-* zusammengehörige Daten werden immer gewährleistet. Deshalb wurde das Konzept "wenn werte sich nicht ändern, müssen Listenelemente nicht geschrieben werden" verworfen (*referenz*: Json aus SinucomNC-Trace). 
-* Größe der Dateien ist kein großes Problem, mein Python-Skrip (interpreter-Sprache) liest die Datei in 0.04s, schreiben dauert 0.04 -> Die Libs sind darauf optimiert. Auch Tests mit Schleifsoftware und 400 Profilmessung zeigt keine Probleme. 
+* To avoid problems with data conversion, a comparison tolerance of 7 decimal places is used. However, the calculation is based on the normal directions.
+* Values `Infinity` / `NaN` are not used, although it would make sense. [[rfc4627](https://www.rfc-editor.org/rfc/rfc4627.txt)](https://www.rfc-editor.org/rfc/rfc4627.txt)
+* `id` of the points is included, for human readability and troubleshooting
+* Related data is always guaranteed. Therefore the concept "if values do not change, list elements do not have to be written" has been discarded (*reference*: Json from SinucomNC trace). 
+* Size of the files is not a big problem, my Python script (interpreter language) reads the file in 0.04s, writing takes 0.04 -> the libs are optimized for this. Tests with grinding software and 400 profile measurement also show no problems.
 
-### 2.5 Elemente: Objects/Arrays/Numbers/Strings
+### 2.5 Elements: Objects/Arrays/Numbers/Strings
 
-* Siehe json-Schema.
+* see on descriptions in json-Schema.
 
-## 3. Altes Austauschformat
+## 3. Old exchange format
 
 <Haas Intern>
