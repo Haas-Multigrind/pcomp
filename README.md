@@ -40,7 +40,7 @@ Both software accesses an exchange folder on the customer server, grinding machi
 * Nominal data is defined via points and associated normal vectors in workpiece coordinates. 
   * usually via X/Y coordinates
   * usually, an Euclidean distance of 0.02 mm is preselected.
-  * Repeated (double) unique points can occur. (information: Will probably be omitted with future versions of the grinding software)
+  * Repeated (double) unique points can occur before Grinding Software version 1_39. 
 * Measured values are returned at each point as a deviation (nominal/actual) in the normal direction.
   * usually, an fitting must be made. 
 
